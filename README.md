@@ -1,8 +1,13 @@
 # 대용량 데이터 조회
 
-[대용량 데이터 DB 저장](https://velog.io/@rivkode/series/%EB%8C%80%EC%9A%A9%EB%9F%89-DB)
+### [대용량 데이터 DB 저장](https://velog.io/@rivkode/series/%EB%8C%80%EC%9A%A9%EB%9F%89-DB)
 
-## 🚀 요구 사항
+## INDEX
+
+- 1차 요구사항
+- 2차 요구사항
+
+# 🚀 1차 요구 사항
 
 목표 : 300만건 이상의 데이터를 DB에 저장하고 페이지네이션을 통해 마지막 페이지에 대한 데이터를 60초 이내로 조회
 
@@ -50,7 +55,23 @@ delete() : DELETE FROM post WHERE id=?
 | Get    | /question/list/first      | 첫 20개 조회                |
 | Get    | /question/list/last/{idx} | idx 개의 데이터 중 가장 마지막 20개 |
 
-## 마지막 페이지 조회 결과
+## 요구사항 결과
+
+- query `SELECT * FROM post ORDER BY id LIMIT 2000000, 100;`
+- id가 PK 값이므로 b-tree로 인덱싱 됨
+- 39초
+
+![](https://user-images.githubusercontent.com/109144975/233895541-3eb92758-f5bb-45ff-9fbe-e1972399b547.png)
+  
+    
+- query `SELECT * FROM post ORDER BY createdDate LIMIT 2000000, 100;`
+- 정렬을 인덱싱하지 않은 값으로 하여 비교적 오랜 시간 소요
+- 58초
+
+![](https://user-images.githubusercontent.com/109144975/233896147-52282941-fac8-4428-82b1-01d85e47f03f.png)
+
+ 
+- 결과 화면
 
 ![image](https://user-images.githubusercontent.com/109144975/233847618-7d0c51f7-de18-4408-967b-dd617a87e5bc.png)
 
@@ -126,3 +147,35 @@ batch 방법 이외로 빠르게 저장하는 방법이 있을까요 ?
 - ide 에서 에러 코드를 보여줄때 1.6만건 이 조회되는 시간이 엄청빨랐음
 - 거의 MYSQL에서 쿼리로 조회하는 수준하고 비슷함
 - 이게 왜 이렇게 빠르게 출력이 될까
+
+
+# 🚀 2차 요구 사항
+
+목표 1 : 300만건 데이터 특정 페이지 조회시 1초 이내로 수행
+
+- JPA 사용하지 않고 Query 문을 통한 조회
+- 테이블 인덱싱
+- 1차 요구사항에서 데이터 조회시 왜 `60초 씩이나` 느린지 알기
+- 어떤 방식으로 빠르게 할 수 있는지 알기
+
+목표 2 : 디스크에 있는 파일을 자바 프로그램으로 읽고 출력할 때의 과정을 자세히 설명
+
+- 자바에 집중하지 말고 운영체제, 컴퓨터가 어떻게 동작하는지 집중해서 공부
+- Java code 로 파일 입출력
+
+목표 3 : DB에 데이터 저장시 속도 향상
+
+- 프로시저
+- bulk INSERT
+- 병렬 스레드
+
+## 🎯 프로그래밍 환경
+- IDE : IntelliJ
+- JDK : 11
+- DB : MYSQL 8.0
+- gradle, junit
+- SpringBoot : 2.7.11
+  - mysql-connector-j
+- Thymeleaf
+
+
