@@ -178,4 +178,99 @@ batch 방법 이외로 빠르게 저장하는 방법이 있을까요 ?
   - mysql-connector-j
 - Thymeleaf
 
+## 고민 내용
+
+- 왜 느릴까 ?
+- 디스크 파일 입출력시 운영체제의 어떤 원리를 필요로 할까?
+
+## 요구사항 결과
+
+- 왜 느릴까 ? (8~40 초)
+
+문제점
+
+1. INDEX 설정
+
+![image](https://user-images.githubusercontent.com/109144975/235354513-d3526bca-650e-45a3-9e56-63ce8b683aae.png)
+
+![image](https://user-images.githubusercontent.com/109144975/235355132-a922ed4f-9aac-4d32-8e5a-5638e4761d9b.png)
+
+post 테이블을 살펴보면 아무런 INDEX도 설정되어있지 않았다
+
+아무 인덱스가 없으니 데이터를 조회할때 매우 느린결과를 얻을 수 밖에 없습니다.
+
+인덱스에서는 2가지 종류가 있습니다.
+- 클러스터형 인덱스 (영어 사전 : 실제 데이터 정렬)
+- 보조 인덱스 (책 뒷편의 찾아보기 : 데이터 위치를 찾은 뒤 해당 페이지를 펼치는 것)
+
+인덱스를 사용하면
+- SELECT 문으로 검색하는 속도가 매우 빨라집니다
+- 컴퓨터의 부담이 줄어드므로 전체 시스템의 성능이 향상됩니다
+
+단점은
+- 인덱스는 그 역할을 위해 추가 10%의 공간이 필요합니다
+- SELECT 가 아닌 데이터의 변경(INSERT, UPDATE, DELETE)가 자주 일어나면 오히려 성능이 나빠질 수 있습니다
+
+id를 기본키(PK)로 정의하겠습니다 아래와 같이 설정하겠습니다
+
+이 말은 id 컬럼에 클러스터형 인덱스가 생성되는 것과 동일합니다
+
+기본키는 테이블에 하나만 지정이 가능하며 클러스터형 인덱스는 테이블에 한 개만 만들 수 있습니다
+
+
+![image](https://user-images.githubusercontent.com/109144975/235355422-37d45e4d-de3b-4978-8fd9-c57b6ea157de.png)
+
+300만개 데이터에 대해 id 컬럼에 대하여 PK를 설정해주는 시간은 약 13초가 소요되었습니다
+
+
+![image](https://user-images.githubusercontent.com/109144975/235355465-d3b25857-3cf0-4a4b-a705-dc754ef90f1b.png)
+
+PK 값을 설정하는 과정에서 id 값이 중복되는 것을 확인하였고 일일이 지워줘야하는 과정을 겪었습니다
+
+위 과정이 발생한 일은 제가 save 코드를 작성할때 for문에서 아래와 같이 등호를 넣어주었기 때문입니다
+
+![image](https://user-images.githubusercontent.com/109144975/235355629-9ca12255-545b-4a6b-a30f-bdb0a9172733.png)
+
+
+기본적인 for문 사용을 잘못된 방법으로 사용하여 중복오류가 발생하였습니다
+
+앞으로 이런 오류가 발생하지 않도록 for문을 주의해서 사용해야겠다는 생각이 들었습니다
+
+
+인덱스를 적용한 결과 BETWEEN 사용시 4초 -> 0.00초의 결과를 얻을 수 있었습니다
+
+![image](https://user-images.githubusercontent.com/109144975/235355748-b6c6161b-cf5e-4f44-98ae-42082187221b.png)
+
+2. LIMIT 사용
+```sql
+SELECT * FROM post WHERE id > startIndex ORDER BY id LIMIT  + startIndex + , + pageSize
+```
+위와 같이 조회를 하게 되면 LIMIT의 경우 startIndex 인덱스까지 한 번에 넘어가면서 skip되는 것이라 생각하였지만 틀렸었습니다
+
+skip 되어 바로 startIndex로 넘어가는 것이 아니고 모두 전부 조회가 다 되는것이었습니다
+
+Paging을 구현할 때 위와 같이 LIMIT, OFFSET을 사용하여 구현하는 경우가 많고 이때 WHERE 조건에서 인덱스가 걸려 최적화 된다고 생각할 수 있지만 중요한 부분은 따로 있었습니다
+
+`Row lookup`으로 인한 성능 저하 입니다
+
+Row lookup은 인덱스가 가르키는 row 행에 접근하여 가져오는 행위를 의미합니다 즉, LIMIT OFFSET을 통해 페이지하는 동안 조회되는 row들을 바라봤기 때문에 성능이 느려지는 것입니다
+
+lookup이 이뤄지지 않도록 인덱스 내에서만 모든 검색을 하고 실제 데이터를 가져올 때 JOIN을 하는 방법입니다
+
+이를 Late row lookup 이라고 합니다
+
+### Row lookup 과 Late row lookup
+
+`Row lookup`이란 Index record 와 실제 Table record 사이에서 발생하는 Fetching을 의미합니다
+
+다시 말해, 인덱스에서 연결된 테이블 레코드로 자료들의 값들을 가져오는 행위를 의미합니다
+
+여기서 테이블 레코드로 접근하여 해당 자료를 읽는 시간이 필요하며 이 소요시간을 최소화 하는 방법을 Late row lookup 입니다
+
+인덱스를 적극 사용하여 late row lookup을 최대화 하는 것이 SELECT 성능을 크게 향상시켜줍니다
+
+이런 방법으로 인덱스 값만 이용하여 INNER SELECT 를 동작한 다음 실제 테이블 레코드와 JOIN을 하는 방법이 위에 예제로 작성된 내용입니다
+
+
+![image](https://user-images.githubusercontent.com/109144975/235356990-25919ec2-f97c-4495-bab0-239df0fb898f.png)
 
