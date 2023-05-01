@@ -316,15 +316,25 @@ FileReader를 통해 파일 디스크립터를 얻음
 
 ![image](https://user-images.githubusercontent.com/109144975/235461482-f5867660-293d-4e24-8fac-2622413d4db6.png)
 
+
+## 입출력의 진행 과정
+```
 1. 파일을 호출함 (Call)
+
 2. 호출하게 되면 그 정보가 파일 시스템으로 내려감
+
 3. 파일 시스템은 그 정보를 통해 디스크 드라이버를 움직임
+
 4. 드라이버가 실제로 디스크 파일에 Write를 함
+
 5. 다 쓰면 드라이버가 파일 시스템에게 alert를 함 (알려줌)
+
 6. 그 다음 System.out.println();을 호출하게 됨 Return
 
-이 blocking I/O의 특징은 Call에서 return까지 계속 Wait를 하고 있음
+```
 
-프로그램이 다음 단계로 넘어가지 못함
+Blocking I/O의 특징은 Call에서 return까지 계속 Wait를 하고 있음
+
+프로그램이 응답결과를 받기 전까지 다음 단계로 넘어가지 못함
 
 
