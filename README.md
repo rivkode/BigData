@@ -187,7 +187,6 @@ batch 방법 이외로 빠르게 저장하는 방법이 있을까요 ?
 
 - 왜 느릴까 ? (8~40 초)
 
-문제점
 
 1. INDEX 설정
 
@@ -273,4 +272,55 @@ lookup이 이뤄지지 않도록 인덱스 내에서만 모든 검색을 하고 
 
 
 ![image](https://user-images.githubusercontent.com/109144975/235356990-25919ec2-f97c-4495-bab0-239df0fb898f.png)
+
+## 2. 디스크에 있는 파일을 자바 프로그램으로 읽고 출력할 때의 과정
+
+[입출력장치](https://github.com/rivkode/tech-for-developer/blob/main/Computer%20Science/Computer%20Architecture/%EC%9E%85%EC%B6%9C%EB%A0%A5%EC%9E%A5%EC%B9%98.md)
+
+- 장치 컨트롤러 : 입출력 장치를 연결하기 위한 하드웨어적 통로
+- 장치 드라이버 : 입출력 장치를 연결하기 위한 소프트웨어적인 통로
+
+자바에서 사용하는 파일 입출력은
+blocking I/O - Synchronous
+
+파일 입출력에는
+- Blocking I/O , Non Blocking I/O
+- Synchronous, Asynchronous
+가 있음
+
+2차 메모리 I/O - File I/O를 함
+
+- 하드웨어에서는 운영체제와 2차 메모리를 연결해주기 위한 디스크 드라이버가 존재함
+- 커널(운영체제)에서는 파일 시스템이 존재함 윈도우는 (NTFS)
+- 파일 시스템은 운영체제 수준에서 동작하는 커널모드 소프트웨어임
+- 하드 디스크 c 드라이브
+- 다른 디스크 d 드라이브
+
+동기화 I/O는
+
+USER 에서 자바 프로그램을 실행시키는 순간 CPU를 할당받고 프로세스가 됨
+
+그러면 파일 시스템에 입출력을 수행하기 위한 인터페이스가 필요함
+
+인터페이스를 통해 파일 I/O를 시도함
+
+FileReader를 통해 파일 디스크립터를 얻음
+
+아래는 System.out.println();을 통해 출력한다면 이루어지는 과정
+
+다시 말해, FileReader로 파일을 열고 println을 하면 이루어지는 과정은
+
+![image](https://user-images.githubusercontent.com/109144975/235461482-f5867660-293d-4e24-8fac-2622413d4db6.png)
+
+1. 파일을 호출함 (Call)
+2. 호출하게 되면 그 정보가 파일 시스템으로 내려감
+3. 파일 시스템은 그 정보를 통해 디스크 드라이버를 움직임
+4. 드라이버가 실제로 디스크 파일에 Write를 함
+5. 다 쓰면 드라이버가 파일 시스템에게 alert를 함 (알려줌)
+6. 그 다음 System.out.println();을 호출하게 됨 Return
+
+이 blocking I/O의 특징은 Call에서 return까지 계속 Wait를 하고 있음
+
+프로그램이 다음 단계로 넘어가지 못함
+
 
