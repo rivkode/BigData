@@ -338,3 +338,41 @@ Blocking I/O의 특징은 Call에서 return까지 계속 Wait를 하고 있음
 프로그램이 응답결과를 받기 전까지 다음 단계로 넘어가지 못함
 
 
+# 🚀 3차 요구 사항
+
+목표 1 : JPA를 사용하여 페이지 네이션을 스프링으로 구현 
+
+- modifiedDate 순으로 데이터를 주는 api 기능
+  - 인덱스 활용
+- 게시물 쓰기 기능
+
+목표 2 : 지난 주차 내용 에서 부족한 내용들 보충
+
+- SQL : `EXPLAIN` 키워드를 사용하여 1초 이내로 쿼리 짜기
+- 디스크의 파일을 코드로 읽고 출력
+  - `Println` 즉, 모니터상 콘솔 출력에서도 입출력 프로세스를 추가하여 설명
+  - System Call 을 통해 Kernel(운영체제)가 USER(운영체제) 에게 자원에 대한 권한을 주고 받는 과정을 설명
+- 읽어야 하는 내용들 정리하기
+  - [SQL Unplugged](https://youtu.be/TRfVeco4wZM)
+  - [Binary Search Tree에서 B+ Tree까지](https://velog.io/@jewelrykim/Binary-Search-Tree%EC%97%90%EC%84%9C-BTree%EA%B9%8C%EC%A7%80Database-Index-%EC%B6%94%EA%B0%80)
+  - [성능향상을 위한 SQL](https://d2.naver.com/helloworld/1155)
+  - [개발자가 알아야 하는 지연 숫자](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
+    - [B+Tree Visualization](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
+
+
+## 🎯 프로그래밍 환경
+- IDE : IntelliJ
+- JDK : 11
+- DB : MYSQL 8.0
+- gradle, junit
+- SpringBoot : 2.7.11
+  - mysql-connector-j
+- Thymeleaf
+
+## 고민 내용
+
+- JPA는 내부적으로 어떻게 동작할까
+  - CRUD 작동원리
+- modifiedDate 컬럼에 대해 인덱스를 적용하면 어떤일이 발생할까
+  - 또 다른 테이블 생성 (추가 10%)
+- 데이터베이스는 왜 B tree 자료구조를 사용하는가
