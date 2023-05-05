@@ -1,11 +1,12 @@
-# 대용량 데이터 조회
+# 대용량 데이터
 
-### [대용량 데이터 DB 저장](https://velog.io/@rivkode/series/%EB%8C%80%EC%9A%A9%EB%9F%89-DB)
+### [대용량 데이터](https://velog.io/@rivkode/series/%EB%8C%80%EC%9A%A9%EB%9F%89-DB)
 
 ## INDEX
 
 - 1차 요구사항
 - 2차 요구사항
+- 3차 요구사항
 
 # 🚀 1차 요구 사항
 
@@ -351,7 +352,8 @@ Blocking I/O의 특징은 Call에서 return까지 계속 Wait를 하고 있음
 - SQL : `EXPLAIN` 키워드를 사용하여 1초 이내로 쿼리 짜기
 - 디스크의 파일을 코드로 읽고 출력
   - `Println` 즉, 모니터상 콘솔 출력에서도 입출력 프로세스를 추가하여 설명
-  - System Call 을 통해 Kernel(운영체제)가 USER(운영체제) 에게 자원에 대한 권한을 주고 받는 과정을 설명
+  - System Call 을 통해 Kernel(운영체제)가 USER(운영체제) 에게 특정 리소스에 대한 접근 권한을 주고 받는 과정을 포함하여 설명
+    - 프로세스가 특정 리소스에 대한 접근 권한을 운영 체제로 요청하면 운영체제는 해당하는 드라이버에 접근 권한을 반환 
 - 읽어야 하는 내용들 정리하기
   - [SQL Unplugged](https://youtu.be/TRfVeco4wZM)
   - [Binary Search Tree에서 B+ Tree까지](https://velog.io/@jewelrykim/Binary-Search-Tree%EC%97%90%EC%84%9C-BTree%EA%B9%8C%EC%A7%80Database-Index-%EC%B6%94%EA%B0%80)

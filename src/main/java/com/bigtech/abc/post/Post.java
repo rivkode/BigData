@@ -2,10 +2,15 @@ package com.bigtech.abc.post;
 
 import lombok.Data;
 
+import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
+@Entity
 public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Long id;
 
     private String content;
