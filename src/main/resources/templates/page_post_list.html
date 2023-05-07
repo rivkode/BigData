@@ -12,7 +12,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="post, loop : ${postList}">
+        <tr th:each="post, loop : ${paging}">
 
             <td th:text="${post.id}"></td>
             <td th:text="${post.subject}"></td>
