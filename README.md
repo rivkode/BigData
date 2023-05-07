@@ -347,20 +347,24 @@ Blocking I/O의 특징은 Call에서 return까지 계속 Wait를 하고 있음
   - 인덱스 활용
 - 게시물 쓰기 기능
 
-목표 2 : 지난 주차 내용 에서 부족한 내용들 보충
+목표 2 : 읽어야 하는 내용들 정리하기
+
+- 읽어야 하는 내용들 정리하기
+  - [SQL Unplugged](https://youtu.be/TRfVeco4wZM)
+  - [Binary Search Tree에서 B+ Tree까지](https://velog.io/@jewelrykim/Binary-Search-Tree%EC%97%90%EC%84%9C-BTree%EA%B9%8C%EC%A7%80Database-Index-%EC%B6%94%EA%B0%80)
+  - [성능향상을 위한 SQL](https://d2.naver.com/helloworld/1155)
+  - [MySql 아키텍처](https://www.youtube.com/watch?v=vQFGBZemJLQ)
+  - [개발자가 알아야 하는 지연 숫자](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
+    - [B+Tree Visualization](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
+
+
+목표 3 : 지난 주차 내용 에서 부족한 내용들 보충
 
 - SQL : `EXPLAIN` 키워드를 사용하여 1초 이내로 쿼리 짜기
 - 디스크의 파일을 코드로 읽고 출력
   - `Println` 즉, 모니터상 콘솔 출력에서도 입출력 프로세스를 추가하여 설명
   - System Call 을 통해 Kernel(운영체제)가 USER(운영체제) 에게 특정 리소스에 대한 접근 권한을 주고 받는 과정을 포함하여 설명
-    - 프로세스가 특정 리소스에 대한 접근 권한을 운영 체제로 요청하면 운영체제는 해당하는 드라이버에 접근 권한을 반환 
-- 읽어야 하는 내용들 정리하기
-  - [SQL Unplugged](https://youtu.be/TRfVeco4wZM)
-  - [Binary Search Tree에서 B+ Tree까지](https://velog.io/@jewelrykim/Binary-Search-Tree%EC%97%90%EC%84%9C-BTree%EA%B9%8C%EC%A7%80Database-Index-%EC%B6%94%EA%B0%80)
-  - [성능향상을 위한 SQL](https://d2.naver.com/helloworld/1155)
-  - [개발자가 알아야 하는 지연 숫자](https://colin-scott.github.io/personal_website/research/interactive_latency.html)
-    - [B+Tree Visualization](https://www.cs.usfca.edu/~galles/visualization/BPlusTree.html)
-
+    - 프로세스가 특정 리소스에 대한 접근 권한을 운영 체제로 요청하면 운영체제는 해당하는 드라이버에 접근 권한을 반환
 
 ## 🎯 프로그래밍 환경
 - IDE : IntelliJ
@@ -378,3 +382,61 @@ Blocking I/O의 특징은 Call에서 return까지 계속 Wait를 하고 있음
 - modifiedDate 컬럼에 대해 인덱스를 적용하면 어떤일이 발생할까
   - 또 다른 테이블 생성 (추가 10%)
 - 데이터베이스는 왜 B tree 자료구조를 사용하는가
+
+## 요구사항 결과
+
+### 목표 1 : JPA를 사용하여 페이지 네이션을 스프링으로 구현
+
+### API 명세
+
+| Method | URI                     | 설명                          |
+|--------|-------------------------|-----------------------------|
+| Get    | /post/pageList?page=int | int 페이지 조회 (수정일 기준)         |
+| Get    | /post/listUp            | Query문 사용하여 수정일 기준 최근 목록 조회 |
+| Post   | /post/save              | Post 저장                     |
+
+1. 페이지네이션을 사용하여 구현
+
+- JPA 의 Page findAll() 메소드를 상속받아 사용하였음
+- postService 에서 Sort.Order.desc("modifiedDate")를 통해 modifiedDate 컬럼을 DESC 조건으로 조회하여 리스트 생성 및 가져옴
+- postController에서 생성한 리스트를 int 값으로 page값을 전달받고 해당하는 페이지를 리턴하여 결과를 화면에 보여줌
+
+결과화면
+
+![image](https://user-images.githubusercontent.com/109144975/236675538-df817f13-2773-495e-b90d-cec0b364dde9.png)
+
+
+
+2. Query를 통해 최근 게시물 조회
+
+```java
+@Query(
+            value = "SELECT * FROM post ORDER BY modified_Date DESC LIMIT 100",
+    nativeQuery = true)
+    List<Post> findByModifiedDate();
+```
+
+- JPA 리포지토리에서 위 메소드를 통해 컨트롤러 반환된 결과를 전달
+  - 1 페이지만 조회하는 것이므로 바로 전달, 서비스를 이용하려했지만 연산이 필요하지 않아 바로 전달함 
+- 컨트롤러에서 결과를 화면에 보여줌
+- 페이징을 직접 구현하려면 수정일 기준 정보들을 조회하고 결과를 반환해야 함
+- 반환하는건 쉽지만 어떻게 최적화 할지는 좀 더 고민 필요 
+
+결과 화면
+
+![image](https://user-images.githubusercontent.com/109144975/236675711-d8da2df8-4a14-4bc9-ac38-a7b6c8b69907.png)
+
+### 목표 2 : 읽어야 하는 내용들 정리하기
+
+```
+고려 사항 :
+- 인덱스를 잘 알고
+- SQL을 이해하며
+- 데이터베이스 알고리즘은 B Tree를 이진 탐색부터 B+ Tree까지 이해하고
+- 데이터베이스가 어떤 아키텍처를 통해 동작하는지 큰 그림 그려보자
+
+DB를 어떻게 왜 사용해야 하는지를 이해하는 것이 핵심 !
+```
+
+### [내용 정리](https://industrious-crow-d0f.notion.site/3-14601cb08e3a46a39577459065e22759)
+
