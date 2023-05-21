@@ -1,24 +1,27 @@
 package com.bigtech.abc.post;
 
+import com.bigtech.abc.member.Member;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Entity
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id")
+    @Column(name = "post_id")
     private Long id;
 
     private String subject;
 
     private String content;
 
-    private Integer likes;
+    @ManyToMany
+    private Set<Member> voter;
 
     private LocalDateTime createdDate;
 
@@ -28,11 +31,11 @@ public class Post {
 
     }
 
-    public Post(Long id, String subject ,String content, Integer likes, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public Post(Long id, String subject ,String content, Set<Member> voter, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.subject = subject;
         this.content = content;
-        this.likes = likes;
+        this.voter = voter;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }

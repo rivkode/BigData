@@ -1,11 +1,14 @@
 package com.bigtech.abc.post;
 
+import com.bigtech.abc.member.Member;
+import com.bigtech.abc.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +21,8 @@ public class PostController {
 
 //    private final PostRepository postRepository;
     private final JPAPostRepository jpaPostRepository;
+
+    private final MemberService memberService;
 
 //    @GetMapping("/list")
 //    public String list(Model model) throws SQLException {
@@ -48,8 +53,8 @@ public class PostController {
     }
 
     @PostMapping("/save")
-    public String postSave(@RequestParam String subject,@RequestParam String content, @RequestParam Integer likes) {
-        this.postService.save(subject, content, likes);
+    public String postSave(@Valid @RequestParam String subject, @RequestParam String content) {
+        this.postService.save(subject, content);
 
         return "redirect:/post/listUp";
     }
@@ -79,8 +84,23 @@ public class PostController {
         return "page_post_list";
     }
 
+    @GetMapping("/vote/{id}")
+    public String postVote(@PathVariable("id") Long id, @RequestParam String name) {
+        Post post = this.postService.getPost(id);
 
+        Member member = this.memberService.getMember(name);
 
+        this.postService.vote(post, member);
+        return String.format("redirect:/post/listUp");
+    }
+
+    @GetMapping("/detail/{id}")
+    public String detail(Model model, @PathVariable("id") Long id) {
+        Post post = this.postService.getPost(id);
+        model.addAttribute("post", post);
+
+        return "post_detail";
+    }
 
 
 }
