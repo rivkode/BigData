@@ -32,7 +32,6 @@ public class BulkDataTest {
             Post post = new Post();
             post.setSubject("Poster : " + faker.name().fullName());
             post.setContent("Poster ip 주소 : " + faker.internet().ipV4Address());
-            post.setLikes(255);
             post.setCreatedDate(createdDate);
             post.setModifiedDate(LocalDateTime.now());
             postList.add(post);
