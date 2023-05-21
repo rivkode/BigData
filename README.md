@@ -438,7 +438,13 @@ Blocking I/O의 특징은 Call에서 return까지 계속 Wait를 하고 있음
 DB를 어떻게 왜 사용해야 하는지를 이해하는 것이 핵심 !
 ```
 
-### [내용 정리](https://industrious-crow-d0f.notion.site/3-14601cb08e3a46a39577459065e22759)
+<br>
+
+
+## [인덱스 클러스터, 힙](https://velog.io/@rivkode/%EC%9D%B8%EB%8D%B1%EC%8A%A4-%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0-%ED%9E%99)
+
+<br>
+
 
 # 🚀 4차 요구 사항
 
@@ -450,6 +456,7 @@ Mysql을 이해하기 위해 3가지 키워드가 있다
 
 이번 시간에는 트랜잭션에 대해 이해해보자
 
+[데이터베이스 트랜잭션(transaction)](https://www.youtube.com/watch?v=sLJ8ypeHGlM)
 
 목표 1 : 회원 게시글 좋아요 기능
 
