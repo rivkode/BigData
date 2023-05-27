@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ import java.util.List;
 public class PostController {
     private final PostService postService;
 
-//    private final PostRepository postRepository;
     private final JPAPostRepository jpaPostRepository;
 
     private final MemberService memberService;
@@ -48,7 +48,7 @@ public class PostController {
 //    }
 
     @GetMapping("/save")
-    public String getPostSave(PostFormDto postFormDto) {
+    public String getPostSave() {
         return "post_form";
     }
 
@@ -85,11 +85,10 @@ public class PostController {
     }
 
     @GetMapping("/vote/{id}")
-    public String postVote(@PathVariable("id") Long id, @RequestParam String name) {
+    public String postVote(Principal principal, @PathVariable("id") Long id, @RequestParam String name) {
         Post post = this.postService.getPost(id);
-
-        Member member = this.memberService.getMember(name);
-
+//        Member member = this.memberService.getMember(name);
+        Member member = this.memberService.getMember(principal.getName());
         this.postService.vote(post, member);
         return String.format("redirect:/post/listUp");
     }
