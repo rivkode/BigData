@@ -2,6 +2,7 @@ package com.bigtech.abc.member;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -15,22 +16,20 @@ import java.time.format.DateTimeFormatter;
 public class MemberController {
     private final MemberService memberService;
 
-    private final JPAMemberRepository jpaMemberRepository;
-
     @GetMapping("/save")
     public String getMemberSave() {
         return "member_form";
     }
 
     @PostMapping("/save")
-    public String MemberSave(@RequestBody MemberFormDto memberFormDto) {
-        this.memberService.save(memberFormDto.getName(), memberFormDto.getEmail(), memberFormDto.getBirth());
+    public String MemberSave(@RequestBody MemberCreateForm memberCreateFormDto) {
+        this.memberService.save(memberCreateFormDto.getName(), memberCreateFormDto.getEmail(), memberCreateFormDto.getPassword1(), memberCreateFormDto.getBirth());
 
         return "redirect:/post/listUp";
     }
 
     @GetMapping("/signup")
-    public String signup(MemberCreateForm memberCreateForm) {
+    public String signup() {
         return "signup_form";
     }
 
@@ -46,7 +45,17 @@ public class MemberController {
             return "signup_form";
         }
 
-        memberService.save(memberCreateForm.getName(), memberCreateForm.getEmail(), memberCreateForm.getBirth());
+        try {
+            memberService.save(memberCreateForm.getName(), memberCreateForm.getEmail(), memberCreateForm.getPassword1(), memberCreateForm.getBirth());
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            bindingResult.reject("singupFailed", "이미 등록된 사용자입니다.");
+            return "signup_form";
+        } catch (Exception e) {
+            e.printStackTrace();
+            bindingResult.reject("signupFailed", e.getMessage());
+            return "signup_form";
+        }
 
         return "redirect:/";
     }
