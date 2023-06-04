@@ -16,6 +16,9 @@ public interface JPAPostRepository extends JpaRepository<Post, Long> {
     nativeQuery = true)
     List<Post> findByModifiedDate();
 
+    @Query("SELECT count(*) FROM Post")
+    Integer getPostCount();
+
     @Query(
             value = "SELECT * FROM post ORDER BY modified_Date DESC LIMIT 10",
             nativeQuery = true)
