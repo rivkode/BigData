@@ -199,6 +199,9 @@ post 테이블을 살펴보면 아무런 INDEX도 설정되어있지 않았다
 
 아무 인덱스가 없으니 데이터를 조회할때 매우 느린결과를 얻을 수 밖에 없습니다.
 
+### [인덱스 클러스터, 힙](https://velog.io/@rivkode/%EC%9D%B8%EB%8D%B1%EC%8A%A4-%ED%81%B4%EB%9F%AC%EC%8A%A4%ED%84%B0-%ED%9E%99)
+
+### [MySQL LIKE % 위치에 따른 인덱스](https://velog.io/@rivkode/MySQL-LIKE-%EC%9C%84%EC%B9%98%EC%97%90-%EB%94%B0%EB%A5%B8-%EC%9D%B8%EB%8D%B1%EC%8A%A4)
 
 인덱스란 ?
 - 추가적인 쓰기 작업과 저장 공간을 활용하여 데이터베이스 테이블의 검색 속도를 향상시키기 위한 자료구조
@@ -280,7 +283,7 @@ lookup이 이뤄지지 않도록 인덱스 내에서만 모든 검색을 하고 
 
 ## 2. 디스크에 있는 파일을 자바 프로그램으로 읽고 출력할 때의 과정
 
-[입출력장치](https://github.com/rivkode/tech-for-developer/blob/main/Computer%20Science/Computer%20Architecture/%EC%9E%85%EC%B6%9C%EB%A0%A5%EC%9E%A5%EC%B9%98.md)
+### [입출력장치](https://github.com/rivkode/tech-for-developer/blob/main/Computer%20Science/Computer%20Architecture/%EC%9E%85%EC%B6%9C%EB%A0%A5%EC%9E%A5%EC%B9%98.md)
 
 - 장치 컨트롤러 : 입출력 장치를 연결하기 위한 하드웨어적 통로
 - 장치 드라이버 : 입출력 장치를 연결하기 위한 소프트웨어적인 통로
