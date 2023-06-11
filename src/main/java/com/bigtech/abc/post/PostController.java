@@ -6,12 +6,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.security.Principal;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 @RequiredArgsConstructor
@@ -24,39 +24,21 @@ public class PostController {
 
     private final MemberService memberService;
 
-//    @GetMapping("/list")
-//    public String list(Model model) throws SQLException {
-//        List<Post> postList = this.postRepository.findAll(); // 전체 검색
-//        model.addAttribute("postList", postList);
-//
-//        return "post_list";
-//    }
-//
-//    @GetMapping("/list/first")
-//    public String listFirst(Model model) throws SQLException {
-//        List<Post> postList = this.postRepository.getPostByPage(1, 20);
-//        model.addAttribute("postList", postList);
-//
-//        return "post_list";
-//    }
-//    @GetMapping("/list/last/{idx}") // 200만개 데이터의 마지막
-//    public String listLast(Model model, @PathVariable Integer idx) throws SQLException {
-//        List<Post> postList = this.postRepository.getPostByPage(idx/20, 20);
-//        model.addAttribute("postList", postList);
-//
-//        return "post_list";
-//    }
-
     @GetMapping("/save")
     public String getPostSave() {
         return "post_form";
     }
 
     @PostMapping("/save")
-    public String postSave(@Valid @RequestParam String subject, @RequestParam String content) {
-        this.postService.save(subject, content);
+    public String postSave(@Valid PostFormDto postFormDto, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "post_form";
+        }
 
-        return "redirect:/post/listUp";
+
+        this.postService.save(postFormDto.getSubject(), postFormDto.getContent());
+
+        return "redirect:/post/pageList";
     }
 
     @GetMapping("/listUp")
@@ -82,15 +64,6 @@ public class PostController {
         Page<Post> paging = this.postService.getList(page);
         model.addAttribute("paging", paging);
         return "page_post_list";
-    }
-
-    @GetMapping("/vote/{id}")
-    public String postVote(Principal principal, @PathVariable("id") Long id, @RequestParam String name) {
-        Post post = this.postService.getPost(id);
-//        Member member = this.memberService.getMember(name);
-        Member member = this.memberService.getMember(principal.getName());
-        this.postService.vote(post, member);
-        return String.format("redirect:/post/listUp");
     }
 
     @GetMapping("/detail/{id}")

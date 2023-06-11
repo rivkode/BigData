@@ -41,7 +41,7 @@ public class PostService {
     public Page<Post> getList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("modifiedDate"));
-        Pageable pageable = PageRequest.of(page, 50, Sort.by(sorts));
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.jpaPostRepository.findAll(pageable);
     }
 
@@ -52,11 +52,6 @@ public class PostService {
         } else {
             throw new RuntimeException("Data not found");
         }
-    }
-
-    public void vote(Post post, Member member) {
-        post.getVoter().add(member);
-        this.jpaPostRepository.save(post);
     }
 
 }

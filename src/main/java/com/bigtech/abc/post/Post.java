@@ -1,11 +1,14 @@
 package com.bigtech.abc.post;
 
+import com.bigtech.abc.like.Like;
 import com.bigtech.abc.member.Member;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 @Data
@@ -20,12 +23,14 @@ public class Post {
 
     private String content;
 
-    @ManyToMany
-    private Set<Member> voter;
 
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;
+
+
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    private List<Like> likeList = new ArrayList<>();
 
     public Post() {
 
@@ -35,7 +40,6 @@ public class Post {
         this.id = id;
         this.subject = subject;
         this.content = content;
-        this.voter = voter;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
     }

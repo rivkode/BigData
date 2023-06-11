@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
-import java.sql.Timestamp;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 public class PostFormDto {
 
     @NotEmpty(message = "제목은 필수입니다")
+    @Size(max = 200)
     private String subject;
 
     @NotEmpty(message = "내용은 필수입니다")
