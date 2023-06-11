@@ -23,13 +23,13 @@ public class MemberController {
 
     @PostMapping("/save")
     public String MemberSave(@RequestBody MemberCreateForm memberCreateFormDto) {
-        this.memberService.save(memberCreateFormDto.getName(), memberCreateFormDto.getEmail(), memberCreateFormDto.getPassword1(), memberCreateFormDto.getBirth());
+        this.memberService.save(memberCreateFormDto.getName(), memberCreateFormDto.getEmail(), memberCreateFormDto.getPassword1());
 
-        return "redirect:/post/listUp";
+        return "redirect:/";
     }
 
     @GetMapping("/signup")
-    public String signup() {
+    public String signup(MemberCreateForm memberCreateForm) {
         return "signup_form";
     }
 
@@ -46,7 +46,7 @@ public class MemberController {
         }
 
         try {
-            memberService.save(memberCreateForm.getName(), memberCreateForm.getEmail(), memberCreateForm.getPassword1(), memberCreateForm.getBirth());
+            memberService.save(memberCreateForm.getName(), memberCreateForm.getEmail(), memberCreateForm.getPassword1());
         } catch (DataIntegrityViolationException e) {
             e.printStackTrace();
             bindingResult.reject("singupFailed", "이미 등록된 사용자입니다.");

@@ -16,14 +16,13 @@ public class MemberService {
     private final JPAMemberRepository jpaMemberRepository;
     private final PasswordEncoder passwordEncoder;
 
-    public void save(String name, String email, String password1, String birth) {
+    public void save(String name, String email, String password1) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        LocalDateTime birthDate = LocalDateTime.parse(birth, formatter);
 
         String input = "2022-01-01 11:22:33";
         LocalDateTime createdDate = LocalDateTime.parse(input, formatter);
 
-        Member member = this.createMember(name, email, password1, birthDate, createdDate, LocalDateTime.now());
+        Member member = this.createMember(name, email, password1, LocalDateTime.now(), createdDate, LocalDateTime.now());
 
         jpaMemberRepository.save(member);
     }
