@@ -23,23 +23,28 @@ public class LikeController {
     private final MemberService memberService;
 
     @PreAuthorize("isAuthenticated()")
-    @GetMapping("/vote/{id}")
-    public String insert(Principal principal, @PathVariable("id") Long id) throws Exception {
-        Post post = postService.getPost(id);
+    @GetMapping("/vote/{id}") // id는 post id임, 기준 좋아요 증가
+    public ResponseEntity<String> insert(Principal principal, @PathVariable("id") Long id) throws Exception {
         Member member = memberService.getMember(principal.getName());
 
-        LikeRequestDto likeRequestDto = new LikeRequestDto();
-        likeRequestDto.setPostId(post.getId());
-        likeRequestDto.setMemberId(member.getId());
+        LikeRequestDto likeRequestDto = new LikeRequestDto(member.getId(), id);
 
         likeService.insert(likeRequestDto);
         Long memberId = likeRequestDto.getMemberId();
-        return String.format("좋아요 성공 %d", memberId);
+        String strMemberId = String.valueOf(memberId);
+        String strId = String.valueOf(id);
+        return ResponseEntity.ok().body("좋아요 수행 member id = " + strMemberId + "post id = " + strId);
     }
 
-    @DeleteMapping()
-    public ResponseEntity<String> delete(@Valid LikeRequestDto likeRequestDto) throws Exception{
+    @PreAuthorize("isAuthenticated()")
+    @GetMapping("/delete/{id}") // id는 post id임, cancelLike() 에서 dto 기준으로 찾음
+    public ResponseEntity<String> delete(Principal principal, @PathVariable("id") Long id) throws Exception{
+        Member member = memberService.getMember(principal.getName());
+        System.out.println(principal.getName());
+        LikeRequestDto likeRequestDto = new LikeRequestDto(member.getId(), id);
+        System.out.println("likeRequestDto 수행");
+
         likeService.cancelLike(likeRequestDto);
-        return ResponseEntity.ok().body("좋아요 실패");
+        return ResponseEntity.ok().body("좋아요 취소");
     }
 }

@@ -23,14 +23,14 @@ public class Like {
     private Member member;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "project_id")
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @Column(name = "like_status")
     @Enumerated(EnumType.STRING)
     private LikeStatus status; // 좋아요 상태 [LIKE, UNLIKE]
 
-    public static Like createPostMember(Member member, Post post) {
+    public static Like create(Member member, Post post) {
         return Like.builder()
                 .member(member)
                 .post(post)
