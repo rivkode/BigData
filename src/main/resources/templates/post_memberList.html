@@ -1,0 +1,15 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+
+    <h2>이 게시글의 좋아요 사용자 목록</h2>
+    <br>
+    <br>
+
+    <tr th:each="name, loop : ${nameList}">
+        <h5><td th:text="${name}"></td></h5>
+    </tr>
+    <div class="my-3">
+    </div>
+</div>
+
+</html>

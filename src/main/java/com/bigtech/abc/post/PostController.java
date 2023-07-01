@@ -1,5 +1,6 @@
 package com.bigtech.abc.post;
 
+import com.bigtech.abc.generic.Result;
 import com.bigtech.abc.member.Member;
 import com.bigtech.abc.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -74,5 +75,12 @@ public class PostController {
         return "post_detail";
     }
 
+    @GetMapping("memberList/{id}")
+    public String memberList(Model model, @PathVariable("id") Long id) {
+        List<Member> members = postService.getMemberList(id);
+        List<String> nameList = postService.getMemberName(members);
+        model.addAttribute("nameList", nameList);
 
+        return "post_memberList";
+    }
 }

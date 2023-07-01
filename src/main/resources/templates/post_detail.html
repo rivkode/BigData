@@ -2,12 +2,16 @@
 <div layout:fragment="content" class="container my-3">
 <h1 th:text="${post.subject}"></h1>
 <div th:text="${post.content}"></div>
-<!--    <div th:replace="~{form_errors :: formErrorsFragment}"></div>-->
 <div class="my-3">
     <a href="javascript:void(0);" class="recommend btn btn-sm btn-outline-secondary"
        th:data-uri="@{|/like/vote/${post.id}|}">
-        추천
+        좋아요
         <span class="badge rounded-pill bg-success" th:text="${#lists.size(post.likeList)}"></span>
+    </a>
+    <a href="javascript:void(0);" class="delete btn btn-sm btn-outline-secondary"
+       th:data-uri="@{|/like/delete/${post.id}|}">
+        좋아요취소
+        <span class="badge rounded-pill bg-success"></span>
     </a>
 </div>
 </div>
