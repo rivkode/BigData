@@ -68,7 +68,7 @@ public class PostService {
         List<Long> memberIdList = jpaLikeRepository.getMemberList(id);
         System.out.println("memberIDList");
 
-        for (Long i : memberIdList){
+        for (Long i : memberIdList) {
             Member member = jpaMemberRepository.findById(i)
                     .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Member가 없습니다"));
             members.add(member);

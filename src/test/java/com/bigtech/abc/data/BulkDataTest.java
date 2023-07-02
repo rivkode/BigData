@@ -81,7 +81,7 @@ public class BulkDataTest {
     }
 
     @Test
-    @DisplayName("Member객체 100개 생성")
+    @DisplayName("Member객체 100만개 생성")
     void bulkMembers() {
         List<Member> memberList = new ArrayList<>();
         Faker faker = new Faker(new Locale("en"));
@@ -89,7 +89,7 @@ public class BulkDataTest {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime createdDate = LocalDateTime.parse(input, formatter);
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000000; i++) {
             String name = faker.name().name();
             String email = faker.internet().emailAddress();
             String password1 = String.valueOf(i + 100);
@@ -99,7 +99,7 @@ public class BulkDataTest {
         }
         System.out.println("memberList = " + memberList.size());
 
-        int batchSize = 10; // 배치 단위 크기
+        int batchSize = 1000; // 배치 단위 크기
         int listSize = memberList.size();
         ; // 전체 데이터 크기
 
@@ -114,7 +114,7 @@ public class BulkDataTest {
 
         int afterpostCount = jpaMemberRepository.getMemberCount();
 
-        Assert.assertEquals("Member객체 100만개 생성", 100, afterpostCount - beforepostCount);
+        Assert.assertEquals("Member객체 100만개 생성", 1000000, afterpostCount - beforepostCount);
     }
 
     @Test
@@ -127,7 +127,7 @@ public class BulkDataTest {
         System.out.println("name = " + name);
     }
     @Test
-    @DisplayName("좋아요 객체 100개 생성")
+    @DisplayName("좋아요 객체 100만개 생성")
     void bulkLikes() {
         /**
          * for 루프를 돌며 한명의 회원이 1개의 게시글에 좋아요를 누른다
@@ -138,10 +138,10 @@ public class BulkDataTest {
          */
         List<Like> likeList = new ArrayList<>();
 
-        Post post = jpaPostRepository.findById(4L)
+        Post post = jpaPostRepository.findById(5L)
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Post가 없습니다"));
 
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 1000000; i++) {
             Long memberId = (long) (i + 1);
             Member member = jpaMemberRepository.findById(memberId)
                     .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Member가 없습니다"));
@@ -152,7 +152,7 @@ public class BulkDataTest {
         }
         System.out.println("likeList = " + likeList.size());
 
-        int batchSize = 10; // 배치 단위 크기
+        int batchSize = 1000; // 배치 단위 크기
         int listSize = likeList.size();
         ; // 전체 데이터 크기
 
@@ -167,7 +167,7 @@ public class BulkDataTest {
 
         int afterpostCount = jpaLikeRepository.getLikeCount();
 
-        Assert.assertEquals("Like객체 100만개 생성", 100, afterpostCount - beforepostCount);
+        Assert.assertEquals("Like객체 100만개 생성", 1000000, afterpostCount - beforepostCount);
     }
 
 }
