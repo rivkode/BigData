@@ -10,6 +10,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Time;
+
 @Service
 @RequiredArgsConstructor
 public class LikeService {
@@ -33,13 +35,29 @@ public class LikeService {
          * createPpso
          */
 
-        boolean b = JPALikeRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
-        if (b) {
+//        boolean b = JPALikeRepository.existsByMemberIdAndPostId(member.getId(), post.getId());
+//        if (b) {
+//            // 좋아요 수행 하지 않음
+//        } else {
+//            Like like = Like.create(member, post);
+//
+//            JPALikeRepository.save(like);
+//        }
+
+        likeSave(member, post);
+        Thread.sleep(10000);
+        System.out.println("hi");
+    }
+
+//    @Transactional
+    public synchronized void likeSave(Member member, Post post) {
+        var b = JPALikeRepository.findByMemberIdAndPostId(member.getId(), post.getId());
+        if (b.isPresent()) {
             // 좋아요 수행 하지 않음
         } else {
             Like like = Like.create(member, post);
 
-            JPALikeRepository.save(like);
+            JPALikeRepository.saveAndFlush(like);
         }
     }
 
