@@ -40,8 +40,8 @@ public class MemberService {
         Member member = new Member();
         member.setName(name);
         member.setEmail(email);
-//        member.setPassword(passwordEncoder.encode(password));
-        member.setPassword(password);
+        member.setPassword(passwordEncoder.encode(password));
+//        member.setPassword(password);
         member.setBirth(birth);
         member.setCreatedDate(createDate);
         member.setUpdateDate(updateDate);

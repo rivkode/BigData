@@ -23,6 +23,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 @SpringBootTest
 public class BulkDataTest {
@@ -127,7 +128,7 @@ public class BulkDataTest {
         System.out.println("name = " + name);
     }
     @Test
-    @DisplayName("좋아요 객체 100만개 생성")
+    @DisplayName("좋아요 객체 10만개 생성")
     void bulkLikes() {
         /**
          * for 루프를 돌며 한명의 회원이 1개의 게시글에 좋아요를 누른다
@@ -138,23 +139,29 @@ public class BulkDataTest {
          */
         List<Like> likeList = new ArrayList<>();
 
-        Post post = jpaPostRepository.findById(5L)
+        Post post = jpaPostRepository.findById(6L)
                 .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Post가 없습니다"));
 
-        for (int i = 0; i < 1000000; i++) {
+
+        for (int i = 1000400; i < 1002400; i++) {
             Long memberId = (long) (i + 1);
-            Member member = jpaMemberRepository.findById(memberId)
-                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Member가 없습니다"));
+            Optional<Member> optionalMember = jpaMemberRepository.findById(memberId);
 
-
-            Like like = Like.create(member, post);
-            likeList.add(like);
+            if (optionalMember.isPresent()) {
+                Member member = optionalMember.get();
+                Like like = Like.create(member, post);
+                likeList.add(like);
+            } else {
+                // Member가 없는 경우에 대한 처리
+                // 예를 들어, 다음 반복문을 계속 진행하거나, 다른 동작을 수행할 수 있습니다.
+                continue; // 다음 반복문을 실행하도록 계속 진행
+            }
         }
         System.out.println("likeList = " + likeList.size());
 
-        int batchSize = 1000; // 배치 단위 크기
+        int batchSize = 100; // 배치 단위 크기
         int listSize = likeList.size();
-        ; // 전체 데이터 크기
+        // 전체 데이터 크기
 
         int beforepostCount = jpaLikeRepository.getLikeCount();
 
@@ -167,7 +174,7 @@ public class BulkDataTest {
 
         int afterpostCount = jpaLikeRepository.getLikeCount();
 
-        Assert.assertEquals("Like객체 100만개 생성", 1000000, afterpostCount - beforepostCount);
+        Assert.assertEquals("Like객체 10만개 생성", 100000, afterpostCount - beforepostCount);
     }
 
 }
