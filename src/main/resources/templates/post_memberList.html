@@ -5,6 +5,11 @@
     <br>
     <br>
 
+    좋아요 개수는 : <span class="badge rounded-pill bg-success" th:text="${#lists.size(nameList)}"></span> 개 입니다
+
+    <br>
+    <br>
+
     <tr th:each="name, loop : ${nameList}">
         <h5><td th:text="${name}"></td></h5>
     </tr>
