@@ -478,14 +478,7 @@ Mysql을 이해하기 위해 3가지 키워드가 있다
 - Mysql에는 parser가 있음
   - 프로그래밍 언어에서는 ?
 
-## 🎯 프로그래밍 환경
-- IDE : IntelliJ
-- JDK : 11
-- DB : MYSQL 8.0
-- gradle, junit
-- SpringBoot : 2.7.11
-  - mysql-connector-j
-- Thymeleaf
+
 
 ## 고민 내용
 
@@ -493,3 +486,17 @@ Mysql을 이해하기 위해 3가지 키워드가 있다
 
 
 ## 요구사항 결과
+
+공유자원, 임계구역, 메모리 배리어, Select for update
+
+### [관련 키워들로 정리하기](https://industrious-crow-d0f.notion.site/5-b03a69e152374a4f86b8ae32026f7ac7?pvs=4)
+
+게시글 좋아요 사용자 조회
+대량 좋아요 기능
+
+### [위 내용 관련 글](https://industrious-crow-d0f.notion.site/6-5d573ea515354554b37a0c6aabf4a98f?pvs=4)
+
+
+좋아요 동시성 테스트
+
+### [좋아요 동시성 테스트](https://industrious-crow-d0f.notion.site/7-83524b320209427498aafa6c18220a9e?pvs=4)
