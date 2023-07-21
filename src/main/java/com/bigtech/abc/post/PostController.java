@@ -4,6 +4,7 @@ import com.bigtech.abc.generic.Result;
 import com.bigtech.abc.member.Member;
 import com.bigtech.abc.member.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,6 +25,8 @@ public class PostController {
     private final JPAPostRepository jpaPostRepository;
 
     private final MemberService memberService;
+
+    private final ApplicationContext applicationContext;
 
     @GetMapping("/save")
     public String getPostSave() {

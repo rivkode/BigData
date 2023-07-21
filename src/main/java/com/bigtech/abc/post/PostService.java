@@ -11,6 +11,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
@@ -28,6 +29,7 @@ public class PostService {
 
     private final JPAMemberRepository jpaMemberRepository;
 
+    @Transactional
     public void save(String subject, String content) {
         Post post = new Post();
 
