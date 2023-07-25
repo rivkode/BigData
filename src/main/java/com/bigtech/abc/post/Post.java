@@ -23,7 +23,9 @@ public class Post {
 
     private String content;
 
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id")
+    private Member member;
     private LocalDateTime createdDate;
 
     private LocalDateTime modifiedDate;
@@ -36,9 +38,10 @@ public class Post {
 
     }
 
-    public Post(Long id, String subject ,String content, Set<Member> voter, LocalDateTime createdDate, LocalDateTime modifiedDate) {
+    public Post(Long id, String subject ,String content, Member member, LocalDateTime createdDate, LocalDateTime modifiedDate) {
         this.id = id;
         this.subject = subject;
+        this.member = member;
         this.content = content;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;

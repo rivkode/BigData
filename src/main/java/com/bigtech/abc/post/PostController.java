@@ -26,21 +26,19 @@ public class PostController {
 
     private final MemberService memberService;
 
-    private final ApplicationContext applicationContext;
-
     @GetMapping("/save")
     public String getPostSave() {
         return "post_form";
     }
 
     @PostMapping("/save")
-    public String postSave(@Valid PostFormDto postFormDto, BindingResult bindingResult) {
+    public String postSave(Principal principal, @Valid PostFormDto postFormDto, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "post_form";
         }
 
 
-        this.postService.save(postFormDto.getSubject(), postFormDto.getContent());
+        this.postService.save(postFormDto.getSubject(), postFormDto.getContent(), memberService.getMember(principal.getName()));
 
         return "redirect:/post/pageList";
     }
@@ -65,7 +63,7 @@ public class PostController {
 
     @GetMapping("/pageList")
     public String list(Model model, @RequestParam(value = "page", defaultValue = "0") int page) {
-        Page<Post> paging = this.postService.getList(page);
+        Page<Post> paging = this.postService.getPostList(page);
         model.addAttribute("paging", paging);
         return "page_post_list";
     }
@@ -82,8 +80,17 @@ public class PostController {
     public String memberList(Model model, @PathVariable("id") Long id) {
         List<Member> members = postService.getMemberList(id);
         List<String> nameList = postService.getMemberName(members);
+
         model.addAttribute("nameList", nameList);
 
         return "post_memberList";
+    }
+
+    @GetMapping("/timeline/{id}")
+    public String timeLine(Model model, @PathVariable("id") Long id) {
+        List<Post> postList = postService.getPostTimelineList(id);
+        model.addAttribute(postList);
+
+        return "timeline_list";
     }
 }

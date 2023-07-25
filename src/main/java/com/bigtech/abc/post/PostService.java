@@ -30,13 +30,14 @@ public class PostService {
     private final JPAMemberRepository jpaMemberRepository;
 
     @Transactional
-    public void save(String subject, String content) {
+    public void save(String subject, String content, Member member) {
         Post post = new Post();
 
         String input = "2022-01-01 11:22:33";
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
         LocalDateTime createdDate = LocalDateTime.parse(input, formatter);
 
+        post.setMember(member);
         post.setSubject(subject);
         post.setContent(content);
         post.setCreatedDate(createdDate);
@@ -48,11 +49,24 @@ public class PostService {
         return this.jpaPostRepository.LastPostid();
     }
 
-    public Page<Post> getList(int page) {
+    public Page<Post> getPostList(int page) {
         List<Sort.Order> sorts = new ArrayList<>();
         sorts.add(Sort.Order.desc("modifiedDate"));
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.jpaPostRepository.findAll(pageable);
+    }
+
+    public List<Post> getPostTimelineList(Long id) {
+        List<Long> postIdList = jpaPostRepository.findPostIdsByMemberId(id);
+        List<Post> postList = new ArrayList<>();
+        for (Long i : postIdList) {
+            Post post = jpaPostRepository.findById(i)
+                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Post가 없습니다"));
+            postList.add(post);
+        }
+
+        return postList;
+
     }
 
     public Post getPost(Long id) {

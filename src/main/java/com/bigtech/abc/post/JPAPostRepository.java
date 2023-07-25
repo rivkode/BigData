@@ -16,6 +16,9 @@ public interface JPAPostRepository extends JpaRepository<Post, Long> {
     nativeQuery = true)
     List<Post> findByModifiedDate();
 
+    @Query(value = "SELECT post_id FROM post where member_id = :id", nativeQuery = true)
+    List<Long> findPostIdsByMemberId(Long id);
+
     @Query("SELECT count(*) FROM Post")
     Integer getPostCount();
 

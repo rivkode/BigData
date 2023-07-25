@@ -29,7 +29,7 @@ public class MemberController {
     }
 
     @GetMapping("/signup")
-    public String signup(MemberCreateForm memberCreateForm) {
+    public String signup() {
         return "signup_form";
     }
 

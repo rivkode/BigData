@@ -27,7 +27,6 @@ public class SecurityConfig {
 
                 .and()
                     .formLogin()
-//                .usernameParameter("name")
                     .loginPage("/member/login")
                     .defaultSuccessUrl("/")
 

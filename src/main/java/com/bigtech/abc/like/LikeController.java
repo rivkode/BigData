@@ -2,14 +2,12 @@ package com.bigtech.abc.like;
 
 import com.bigtech.abc.member.Member;
 import com.bigtech.abc.member.MemberService;
-import com.bigtech.abc.post.Post;
 import com.bigtech.abc.post.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
 import java.security.Principal;
 
 @RestController
