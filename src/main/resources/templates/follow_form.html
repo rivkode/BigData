@@ -1,0 +1,16 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+<form th:action="@{/follow/do}" method="post">
+
+    <div class="mb-3">
+        <label for="followerId" class="form-label">팔로워 ID</label>
+        <input type="text" name="followerId" id="followerId" class="form-control">
+    </div>
+    <div class="mb-3">
+        <label for="followingId" class="form-label">팔로잉 ID</label>
+        <input type="text" name="followingId" id="followingId" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-primary">저장</button>
+</form>
+</div>
+</html>

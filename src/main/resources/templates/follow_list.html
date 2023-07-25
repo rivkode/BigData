@@ -1,0 +1,20 @@
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container my-3">
+
+  <h2>팔로워 목록</h2>
+  <br>
+  <br>
+
+  팔로워 수는 : <span class="badge rounded-pill bg-success" th:text="${#lists.size(nameList)}"></span> 명 입니다
+
+  <br>
+  <br>
+
+  <tr th:each="name, loop : ${nameList}">
+    <h5><td th:text="${name}"></td></h5>
+  </tr>
+  <div class="my-3">
+  </div>
+</div>
+
+</html>
