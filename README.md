@@ -494,9 +494,88 @@ Mysql을 이해하기 위해 3가지 키워드가 있다
 게시글 좋아요 사용자 조회
 대량 좋아요 기능
 
-### [위 내용 관련 글](https://industrious-crow-d0f.notion.site/6-5d573ea515354554b37a0c6aabf4a98f?pvs=4)
+### [게시글을 좋아요한 사용자 조회, 좋아요 대량 생성](https://industrious-crow-d0f.notion.site/6-5d573ea515354554b37a0c6aabf4a98f?pvs=4)
 
 
 좋아요 동시성 테스트
 
 ### [좋아요 동시성 테스트](https://industrious-crow-d0f.notion.site/7-83524b320209427498aafa6c18220a9e?pvs=4)
+
+
+# 🚀 5차 요구 사항
+
+@Transactional 어노테이션이 동작하는 자세한 원리
+
+이번시간에는 스프링에서 자주 사용하는 Transactional 어노테이션에 대해 알아보자
+
+## 요구사항 결과
+
+### [Transactional, 상속에 대해](https://github.com/rivkode/tech-for-developer/blob/main/Computer%20Science/Programing%20Language%20Theory/%EC%83%81%EC%86%8D%20Transactional.md)
+
+# 🚀 6차 요구 사항
+
+- 타임라인
+  - 팔로워들의 글들을 무한스크롤 기능 구현
+- 약타입, 강타입 언어 특징
+- 프로세스 스레드 exec fork 정리
+
+
+## 고민내용
+
+스키마 변경
+
+기존의 Post 스키마는 아래와 같다
+
+```
++---------------+--------------+------+-----+---------+----------------+
+| Field         | Type         | Null | Key | Default | Extra          |
++---------------+--------------+------+-----+---------+----------------+
+| post_id       | bigint       | NO   | PRI | NULL    | auto_increment |
+| content       | varchar(255) | YES  |     | NULL    |                |
+| created_date  | datetime(6)  | YES  |     | NULL    |                |
+| modified_date | datetime(6)  | YES  |     | NULL    |                |
+| subject       | varchar(255) | YES  |     | NULL    |                |
++---------------+--------------+------+-----+---------+----------------+
+```
+
+여기서 팔로워들의 글들을 가져오려면 Post를 누가 썼는지에 대한 Member id가 있어야 한다
+
+이전에 구현했던 좋아요 기능을 생각해보면
+누가 좋아요를 눌렀는지에 대한 정보는 Like 테이블 내에 좋아요한 **member id**와 **post id**를 하나의 column에 넣어 관리했다
+
+아래 Like의 테이블을 살펴보자
+```
++-------------+--------------+------+-----+---------+----------------+
+| Field       | Type         | Null | Key | Default | Extra          |
++-------------+--------------+------+-----+---------+----------------+
+| id          | bigint       | NO   | PRI | NULL    | auto_increment |
+| like_status | varchar(255) | YES  |     | NULL    |                |
+| member_id   | bigint       | YES  | MUL | NULL    |                |
+| post_id     | bigint       | YES  | MUL | NULL    |                |
++-------------+--------------+------+-----+---------+----------------+
+```
+
+이와 같이 하나의 column에 넣어 관리하였고 누가 좋아요를 했는지를 알기 위해서는
+
+`SELECT member_id FROM like where post_id : id` 로 확인하면 되었었다
+
+이번에도 비슷하게 member_id에 따른 post_id가 필요했기 때문에
+
+`SELECT post_id FROM post where member_id : id` 로 확인하려 했지만
+member_id가 없었다
+
+~~이때 스키마를 변경해야할지, 혹은 JOIN을 사용해야할지 고민을 하였다
+
+하지만 JOIN을 사용하게 되면 post 테이블과 member테이블을 JOIN 하게되면 성능이 좋지 않을까 생각하였다~~
+
+다시보니 애초에 post나 member에서 외래키를 관리하지 않았음 .. 이러면 누가 post를 작성했는지 모른다는 건데 왜 이런식으로 설계했을까.. 다시 되돌아보게 된다
+
+한 명의 사용자가 여러 게시글을 쓸 수 있으므로 post 테이블이 member id인 FK를 관리하도록 한다
+
+즉, post 테이블에 member_id를 추가하자
+
+이후 아까 시도하려고 하였던 `SELECT post_id FROM post where member_id : id` 로 post_id를 가져온 뒤
+
+post 리스트를 만들어서 화면에 표시해보자
+
+
