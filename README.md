@@ -522,7 +522,9 @@ Mysql을 이해하기 위해 3가지 키워드가 있다
 
 ## 고민내용
 
-스키마 변경
+~~스키마 변경 잘못 생각함~~ 원래 변경해야했음
+
+팔로우를 동시성은 어떻게 막을까 ?
 
 기존의 Post 스키마는 아래와 같다
 
@@ -579,3 +581,36 @@ member_id가 없었다
 post 리스트를 만들어서 화면에 표시해보자
 
 
+### 팔로우 동시성 이슈 해결
+
+for update 와 @Transactional, synchronized 를 사용하여 동시성 이슈를 해결하였습니다
+
+먼저 코드영역인 service 에서 @Transactional 어노테이션을 통해 service 클래스의 proxy 객체를 생성하여 followSave() 메서드 실행 시
+시작부분과 마지막부분에 트랜잭션 시작과 커밋이 되도록 합니다
+
+그리고 synchronized 키워드를 통해 해당 메서드에 대해 동기화 처리를 해주어 동시에 여러개의 프로세스가 접근할 수 없도록 제어합니다
+
+그리고 DB 영역에서 for update를 통해 LOCK을 걸어주어 먼저 들어온 SESSION에 대해 권한을 주고 해당 SESSION의 커밋이 끝나기 전까지는 다른 SESSION이
+수정할 수 없도록 하였습니다
+
+아래는 관련 java 코드입니다
+
+
+```java
+@Query(value = "SELECT * FROM follow WHERE follower_id = :followerId AND following_id = :followingId for update", nativeQuery = true)
+    Optional<Follow> findByFollowerIdAndFollowingId(@Param("followerId") Long followerId, @Param("followingId") Long followingId);
+```
+
+```java
+@Transactional
+    public synchronized void followSave(Member follower, Member following) { // synchronized 사용하여 동기화 처리
+        var f = jpaFollowRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId());
+        if (f.isPresent()) {
+            // follow가 이미 존재하므로 아무런 동작 없음
+            return;
+        } else {
+            Follow follow = Follow.create(follower, following);
+            this.jpaFollowRepository.save(follow);
+        }
+    }
+```
