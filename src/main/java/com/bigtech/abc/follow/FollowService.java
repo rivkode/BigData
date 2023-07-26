@@ -6,6 +6,7 @@ import com.bigtech.abc.member.JPAMemberRepository;
 import com.bigtech.abc.member.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,14 +18,35 @@ public class FollowService {
 
     private final JPAMemberRepository jpaMemberRepository;
 
+    @Transactional
     public void save(Long followerId, Long followingId) {
 
+        /**
+         * 동일한 팔로우가 존재하는지 검증하는 로직
+         * followerId 기준 이전 동일한 followingId가 있다면 바로 return
+         * 아무동작하지 않도록 함
+         */
+        List<Long> followIdList = jpaFollowRepository.getFollowList(followerId);
+        if (followIdList.contains(followingId)) {
+            return;
+        }
         Member follower = this.findMember(followerId);
         Member following = this.findMember(followingId);
 
-        Follow follow = Follow.create(follower, following);
+        // 동기화 처리
+        followSave(follower, following);
+    }
 
-        this.jpaFollowRepository.save(follow);
+    @Transactional
+    public synchronized void followSave(Member follower, Member following) { // synchronized 사용하여 동기화 처리
+        var f = jpaFollowRepository.findByFollowerIdAndFollowingId(follower.getId(), following.getId());
+        if (f.isPresent()) {
+            // follow가 이미 존재하므로 아무런 동작 없음
+            return;
+        } else {
+            Follow follow = Follow.create(follower, following);
+            this.jpaFollowRepository.save(follow);
+        }
     }
 
     public Member findMember(Long id) {

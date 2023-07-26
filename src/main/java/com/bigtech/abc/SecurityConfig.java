@@ -19,7 +19,8 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.authorizeRequests().antMatchers("/**").permitAll()
+        httpSecurity.csrf().disable()
+                .authorizeRequests().antMatchers("/**").permitAll()
                 .and()
                     .headers()
                     .addHeaderWriter(new XFrameOptionsHeaderWriter(
