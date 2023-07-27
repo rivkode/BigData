@@ -1,6 +1,6 @@
 package com.bigtech.abc.connection;
 
-import com.bigtech.abc.conntection.DBConnectionUtil;
+import com.bigtech.abc.common.conntection.DBConnectionUtil;
 import groovy.util.logging.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

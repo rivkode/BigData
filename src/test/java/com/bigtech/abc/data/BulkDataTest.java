@@ -1,15 +1,15 @@
 package com.bigtech.abc.data;
 
-import com.bigtech.abc.exception.AppException;
-import com.bigtech.abc.exception.ErrorCode;
-import com.bigtech.abc.like.Like;
-import com.bigtech.abc.like.JPALikeRepository;
-import com.bigtech.abc.like.LikeService;
-import com.bigtech.abc.member.JPAMemberRepository;
-import com.bigtech.abc.member.Member;
-import com.bigtech.abc.member.MemberService;
-import com.bigtech.abc.post.JPAPostRepository;
-import com.bigtech.abc.post.Post;
+import com.bigtech.abc.common.exception.AppException;
+import com.bigtech.abc.common.exception.ErrorCode;
+import com.bigtech.abc.domain.like.Like;
+import com.bigtech.abc.domain.like.JPALikeRepository;
+import com.bigtech.abc.service.like.LikeService;
+import com.bigtech.abc.domain.member.JPAMemberRepository;
+import com.bigtech.abc.domain.member.Member;
+import com.bigtech.abc.service.member.MemberService;
+import com.bigtech.abc.domain.post.JPAPostRepository;
+import com.bigtech.abc.domain.post.Post;
 import com.github.javafaker.Faker;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -1,6 +1,6 @@
 //package com.bigtech.abc.data;
 //
-//import com.bigtech.abc.post.Post;
+//import com.bigtech.abc.domain.post.Post;
 //import org.assertj.core.api.Assertions;
 //import org.junit.jupiter.api.Test;
 //
