@@ -1,4 +1,4 @@
-package com.bigtech.abc.domain.common;
+package com.bigtech.abc;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Getter;

@@ -1,6 +1,6 @@
 package com.bigtech.abc.common.dto;
 
-import com.bigtech.abc.domain.common.AuditingTimeEntity;
+import com.bigtech.abc.AuditingTimeEntity;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
