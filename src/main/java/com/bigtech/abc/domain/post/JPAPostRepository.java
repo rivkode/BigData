@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface JPAPostRepository extends JpaRepository<Post, Long> {
+public interface JPAPostRepository extends JpaRepository<Post, Long>, PostRepositoryCustom {
 
     @Query(
             value = "SELECT * FROM post ORDER BY modified_Date DESC LIMIT 100",

@@ -46,7 +46,6 @@ public class FollowController {
     @PostMapping("/pre")
     public String pre(@Valid FollowDto followDto) {
         Long id = followDto.getFollowerId();
-        System.out.println("id = " + id);
         return "redirect:/post/timeline/" + id;
     }
 

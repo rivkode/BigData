@@ -8,6 +8,9 @@ import com.bigtech.abc.service.post.PostService;
 import com.bigtech.abc.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -69,6 +72,15 @@ public class PostController {
         model.addAttribute("paging", paging);
         return "page_post_list";
     }
+
+    @PostMapping("/searchBySubject")
+    public String scrollList(Model model, @RequestParam(value = "subject", defaultValue = "") String subject,@RequestParam(value = "page", defaultValue = "0") int page) {
+        Page<Post> paging = this.postService.getQuerydslPostList(subject, page);
+        model.addAttribute("paging", paging);
+        return "redirect:/post/pageList";
+    }
+
+
 
     @GetMapping("/detail/{id}")
     public String detail(Model model, @PathVariable("id") Long id) {

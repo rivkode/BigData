@@ -3,6 +3,19 @@
     <div class="col-6">
         <a th:href="@{/post/save}" class="btn btn-primary">질문 등록하기</a>
     </div>
+    <br>
+    <br>
+
+    <form th:action="@{/post/searchBySubject}" method="post">
+        <div class="mb-3">
+            <label for="subject" class="form-label">제목 입력</label>
+            <input type="text" name="subject" id="subject" class="form-control">
+        </div>
+
+        <button type="submit" class="btn btn-primary">검색</button>
+    </form>
+    <br>
+    <br>
     <table class="table">
         <thead class="table-dark">
         <tr class="text-center">

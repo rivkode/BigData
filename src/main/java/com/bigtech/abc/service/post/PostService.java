@@ -7,6 +7,7 @@ import com.bigtech.abc.domain.member.JPAMemberRepository;
 import com.bigtech.abc.domain.member.Member;
 import com.bigtech.abc.domain.post.JPAPostRepository;
 import com.bigtech.abc.domain.post.Post;
+import com.bigtech.abc.domain.post.PostRepositoryImpl;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -29,6 +30,8 @@ public class PostService {
     private final JPALikeRepository jpaLikeRepository;
 
     private final JPAMemberRepository jpaMemberRepository;
+
+    private final PostRepositoryImpl postRepositoryImpl;
 
     @Transactional
     public void save(String subject, String content, Member member) {
@@ -56,6 +59,12 @@ public class PostService {
         Pageable pageable = PageRequest.of(page, 10, Sort.by(sorts));
         return this.jpaPostRepository.findAll(pageable);
     }
+
+    public Page<Post> getQuerydslPostList(String name, int page) {
+        Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Order.desc("modifiedDate")));
+        return postRepositoryImpl.findBySubject(name, pageable);
+    }
+
 
     public List<Post> getPostTimelineList(Long id) {
         List<Long> postIdList = jpaPostRepository.findPostIdsByMemberId(id);
@@ -102,5 +111,4 @@ public class PostService {
 
         return nameList;
     }
-
 }
