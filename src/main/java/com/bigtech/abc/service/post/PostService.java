@@ -111,4 +111,8 @@ public class PostService {
 
         return nameList;
     }
+
+    public List<Post> scrollNoOffset(Long postId) {
+        return this.jpaPostRepository.NoOffsetPage(postId);
+    }
 }

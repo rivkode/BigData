@@ -68,3 +68,6 @@ clean {
     delete file(querydslSrcDir)
 }
 
+test {
+    useJUnitPlatform()
+}

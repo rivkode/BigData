@@ -74,12 +74,11 @@ public class PostController {
     }
 
     @PostMapping("/searchBySubject")
-    public String scrollList(Model model, @RequestParam(value = "subject", defaultValue = "") String subject,@RequestParam(value = "page", defaultValue = "0") int page) {
+    public String scrollList(Model model, @RequestParam(value = "subject", defaultValue = "") String subject, @RequestParam(value = "page", defaultValue = "0") int page) {
         Page<Post> paging = this.postService.getQuerydslPostList(subject, page);
         model.addAttribute("paging", paging);
         return "redirect:/post/pageList";
     }
-
 
 
     @GetMapping("/detail/{id}")
@@ -107,4 +106,12 @@ public class PostController {
 
         return "timeline_list";
     }
+
+    @PostMapping("/scrollNoOffset/{postId}")
+    @ResponseBody
+    public List<Post> scrollNoOffset(@PathVariable("postId") Long postId) {
+        List<Post> postList = postService.scrollNoOffset(postId);
+        return postList;
+    }
+
 }

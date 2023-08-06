@@ -13,7 +13,7 @@ public interface JPAPostRepository extends JpaRepository<Post, Long>, PostReposi
 
     @Query(
             value = "SELECT * FROM post ORDER BY modified_Date DESC LIMIT 100",
-    nativeQuery = true)
+            nativeQuery = true)
     List<Post> findByModifiedDate();
 
     @Query(value = "SELECT post_id FROM post where member_id = :id", nativeQuery = true)
@@ -34,4 +34,7 @@ public interface JPAPostRepository extends JpaRepository<Post, Long>, PostReposi
 
     @Override
     Page<Post> findAll(Pageable pageable);
+
+    @Query(value = "SELECT * FROM post WHERE post_id < :id ORDER BY post_id DESC LIMIT 10", nativeQuery = true)
+    List<Post> NoOffsetPage(Long id);
 }
