@@ -1,5 +1,7 @@
 package com.bigtech.abc.domain.post;
 
+import com.bigtech.abc.service.post.PostPageDto;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
@@ -29,5 +31,32 @@ public class PostRepositoryImpl implements PostRepositoryCustom{
                 .orderBy(qPost.modifiedDate.desc())
                 .fetch();
         return new PageImpl<>(content, pageable, totalCount);
+    }
+
+//    @Override
+//    public List<PostPageDto> paginationNoOffset(Long postId, String name, int pageSize) {
+//        return queryFactory
+//                .select(Projections.fields(PostPageDto.class,
+//                        post.id.as("postId"),
+//                        post.subject,
+//                        post.content,
+//                        post.createdDate,
+//                        post.modifiedDate,
+//                        post.member))
+//                .from(post)
+//                .where(
+//                        ltPostId(postId),
+//                        post.subject.like(name + "%")
+//                )
+//                .orderBy(post.id.desc())
+//                .limit(pageSize)
+//                .fetch();
+//    }
+
+    private BooleanExpression ltPostId(Long postId) {
+        if (postId == null) {
+            return null;
+        }
+        return post.id.lt(postId);
     }
 }

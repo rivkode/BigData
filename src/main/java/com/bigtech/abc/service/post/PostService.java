@@ -2,6 +2,7 @@ package com.bigtech.abc.service.post;
 
 import com.bigtech.abc.common.exception.AppException;
 import com.bigtech.abc.common.exception.ErrorCode;
+import com.bigtech.abc.domain.follow.JPAFollowRepository;
 import com.bigtech.abc.domain.like.JPALikeRepository;
 import com.bigtech.abc.domain.member.JPAMemberRepository;
 import com.bigtech.abc.domain.member.Member;
@@ -32,6 +33,8 @@ public class PostService {
     private final JPAMemberRepository jpaMemberRepository;
 
     private final PostRepositoryImpl postRepositoryImpl;
+
+    private final JPAFollowRepository jpaFollowRepository;
 
     @Transactional
     public void save(String subject, String content, Member member) {
@@ -67,13 +70,26 @@ public class PostService {
 
 
     public List<Post> getPostTimelineList(Long id) {
-        List<Long> postIdList = jpaPostRepository.findPostIdsByMemberId(id);
+        /**
+         * 팔로워 목록 가져오는 로직 필요
+         */
+        List<Long> followIdList = jpaFollowRepository.getFollowList(id);
         List<Post> postList = new ArrayList<>();
-        for (Long i : postIdList) {
-            Post post = jpaPostRepository.findById(i)
-                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Post가 없습니다"));
-            postList.add(post);
+        for (Long i : followIdList) {
+            List<Long> postIdList = jpaPostRepository.findPostIdsByMemberId(i); // member id 기준 어떤 post를 작성하였는지 본다
+            for (Long j : postIdList) { // memberid = 1 이 작성한 post id 모음, 즉 post id 를 가져온 것
+                Post post = jpaPostRepository.findById(j)
+                        .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Post가 없습니다"));
+                postList.add(post);
+            }
         }
+//        List<Long> postIdList = jpaPostRepository.findPostIdsByMemberId(id); // member id 기준 어떤 post를 작성하였는지 본다
+//        List<Post> postList = new ArrayList<>();
+//        for (Long i : postIdList) { // memberid = 1 이 작성한 post id 모음, 즉 post id 를 가져온 것
+//            Post post = jpaPostRepository.findById(i)
+//                    .orElseThrow(() -> new AppException(ErrorCode.INVALID_DATA, "Post가 없습니다"));
+//            postList.add(post);
+//        }
 
         return postList;
 
@@ -115,4 +131,8 @@ public class PostService {
     public List<Post> scrollNoOffset(Long postId) {
         return this.jpaPostRepository.NoOffsetPage(postId);
     }
+
+//    public List<PostPageDto> paginationNoOffset(Long postId, String name, int pageSize) {
+//        return postRepositoryImpl.paginationNoOffset(postId, name, pageSize);
+//    }
 }

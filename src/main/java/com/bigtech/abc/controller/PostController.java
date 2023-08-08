@@ -4,6 +4,7 @@ import com.bigtech.abc.domain.member.Member;
 import com.bigtech.abc.domain.post.JPAPostRepository;
 import com.bigtech.abc.domain.post.Post;
 import com.bigtech.abc.service.post.PostFormDto;
+import com.bigtech.abc.service.post.PostPageDto;
 import com.bigtech.abc.service.post.PostService;
 import com.bigtech.abc.service.member.MemberService;
 import lombok.RequiredArgsConstructor;
@@ -101,17 +102,24 @@ public class PostController {
 
     @GetMapping("/timeline/{id}")
     public String timeLine(Model model, @PathVariable("id") Long id) {
-        List<Post> postList = postService.getPostTimelineList(id);
+        List<Post> postList = postService.getPostTimelineList(id); // id = member id임 팔로워의 글을 볼 수 있어야 함
         model.addAttribute(postList);
 
         return "timeline_list";
     }
 
     @PostMapping("/scrollNoOffset/{postId}")
-    @ResponseBody
-    public List<Post> scrollNoOffset(@PathVariable("postId") Long postId) {
+    public String scrollNoOffset(Model model, @PathVariable("postId") Long postId) {
         List<Post> postList = postService.scrollNoOffset(postId);
-        return postList;
+        model.addAttribute(postList);
+        return "post_list";
     }
+
+//    @PostMapping("/paginationNoOffset")
+//    @ResponseBody
+//    public List<PostPageDto> paginationNoOffset(@Valid PostPageDto pageDto) {
+//        List<PostPageDto> posts = postService.paginationNoOffset(pageDto.getPostId(), pageDto.getSubject(), 10);
+//        return posts;
+//    }
 
 }

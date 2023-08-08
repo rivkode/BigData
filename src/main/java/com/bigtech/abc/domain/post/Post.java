@@ -2,6 +2,7 @@ package com.bigtech.abc.domain.post;
 
 import com.bigtech.abc.domain.like.Like;
 import com.bigtech.abc.domain.member.Member;
+import com.querydsl.core.annotations.QueryEntity;
 import lombok.Data;
 
 import javax.persistence.*;
