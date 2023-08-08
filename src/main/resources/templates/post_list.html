@@ -6,7 +6,6 @@
             <th>id</th>
             <th>subject</th>
             <th>content</th>
-            <th>voter</th>
             <th>createdDate</th>
             <th>modifiedDate</th>
         </tr>
@@ -15,7 +14,6 @@
         <tr th:each="post, loop : ${postList}">
 
             <td th:text="${post.id}"></td>
-            <td th:text="${post.subject}"></td>
             <td>
                 <a th:href="@{|/post/detail/${post.id}|}" th:text="${post.subject}"></a>
             </td>
