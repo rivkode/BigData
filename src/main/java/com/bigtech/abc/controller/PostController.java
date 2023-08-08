@@ -90,7 +90,7 @@ public class PostController {
         return "post_detail";
     }
 
-    @GetMapping("memberList/{id}")
+    @GetMapping("/memberList/{id}")
     public String memberList(Model model, @PathVariable("id") Long id) {
         List<Member> members = postService.getMemberList(id);
         List<String> nameList = postService.getMemberName(members);
@@ -115,11 +115,11 @@ public class PostController {
         return "post_list";
     }
 
-//    @PostMapping("/paginationNoOffset")
-//    @ResponseBody
-//    public List<PostPageDto> paginationNoOffset(@Valid PostPageDto pageDto) {
-//        List<PostPageDto> posts = postService.paginationNoOffset(pageDto.getPostId(), pageDto.getSubject(), 10);
-//        return posts;
-//    }
+    @GetMapping("/followPost/{id}")
+    public String followPost(Model model, @PathVariable("id") Long id) {
+        List<Post> postList = postService.followingPost(id);
+        model.addAttribute(postList);
 
+        return "timeline_list";
+    }
 }

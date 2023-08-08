@@ -37,4 +37,7 @@ public interface JPAPostRepository extends JpaRepository<Post, Long>, PostReposi
 
     @Query(value = "SELECT * FROM post WHERE post_id < :id ORDER BY post_id DESC LIMIT 10", nativeQuery = true)
     List<Post> NoOffsetPage(Long id);
+
+    @Query(value = "SELECT * FROM post WHERE member_id in (SELECT following_id from follow WHERE follower_id =:id)", nativeQuery = true)
+    List<Post> followPost(Long id);
 }
